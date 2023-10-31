@@ -1,4 +1,5 @@
 let filepath = "";
+let filename = "";
 let outputData = null;
 let outputFileType = null;
 let processing = false;
