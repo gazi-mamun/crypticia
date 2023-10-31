@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' 'unsafe-inline'"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="../js/renderer.js" defer></script>
+    <title>Crypticia</title>
+  </head>
+  <body class="bg-teal-700">
+    <div class="main_body">
+      <!-- drop zone -->
+      <div class="drop_zone">
+        <span class="drop_zone_prompt"
+          >Drop file here or click to encrypt/decrypt</span
+        >
+        <input type="file" name="uploadedFile" class="drop_zone_input" />
+      </div>
+
+      <!-- file form -->
+      <form class="file_form">
+        <input type="password" id="password" placeholder="Password" />
+        <div class="btn_container">
+          <button type="button" class="file_btn_cancel">Cancel</button>
+          <button type="submit" class="file_btn_submit">Encrypt</button>
+        </div>
+      </form>
+
+      <!-- file download div -->
+      <div class="file_download">
+        <div class="btn_container save_container">
+          <button type="button" class="start_over save_btn">Start Over</button>
+          <button type="submit" class="save_btn_submit save_btn">
+            Save As
+          </button>
+        </div>
+      </div>
+
+      <p class="divider">or</p>
+
+      <!-- text input form -->
+      <form class="text_form">
+        <textarea
+          class="text_form_input"
+          name="inputedText"
+          placeholder="Enter your text here to encrypt/decrypt"
+        ></textarea>
+        <input
+          type="password"
+          placeholder="Password"
+          id="text_password_input"
+        />
+
+        <!-- button container -->
+        <div class="btn_container text_btn_container">
+          <button type="button" class="text_btn_cancel">Cancel</button>
+          <button type="button" class="text_btn_submit" id="encrypt_btn">
+            Encrypt
+          </button>
+          <button type="button" class="text_btn_submit" id="decrypt_btn">
+            Decrypt
+          </button>
+        </div>
+
+        <div class="output">
+          <p class="output_title">output :</p>
+          <div class="output_text_div">
+            <p class="output_text"></p>
+            <span class="copy_btn">
+              <div class="copy_btn_svg"></div>
+              <p class="copy_btn_text">copy</p>
+            </span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

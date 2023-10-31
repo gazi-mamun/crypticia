@@ -1,0 +1,367 @@
+:root {
+  --bg: #212121;
+  --pri: #ff5252;
+  --sec: #d32f2f;
+  --text: #ffffff;
+  --assent: #757575;
+  --success: #4caf50;
+  --alert: ##ffc107;
+
+  --xxlg-font: 1.375rem;
+  --xlg-font: 1.125rem;
+  --lg-font: 1rem;
+  --base-font: 0.875rem;
+  --sm-font: 0.75rem;
+  --xsm-font: 0.6875rem;
+  --xxsm-font: 0.625rem;
+
+  --desk-div: 2.5rem;
+  --desk-lg: 1.5rem;
+  --desk-base: 1rem;
+  --desk-sm: 0.5rem;
+  --desk-xsm: 0.25rem;
+}
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  font-family: Poppins, sans-serif;
+}
+
+body {
+  margin: 0;
+  line-height: inherit;
+  overflow: hidden;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+hr {
+  height: 0;
+  color: inherit;
+  border-top-width: 1px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 1em;
+}
+
+small {
+  font-size: 80%;
+}
+
+input,
+textarea {
+  font-family: Poppins, sans-serif;
+}
+
+.main_body {
+  padding: var(--desk-base);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.title {
+  font-size: var(--xxlg-font);
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Drop zone */
+
+.drop_zone {
+  width: 280px;
+  height: 150px;
+  padding: var(--desk-base);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  cursor: pointer;
+  color: var(--text);
+  border: 1.5px dashed var(--sec);
+  border-radius: 8px;
+  transition: border 0.3s ease-in-out;
+}
+
+span {
+  opacity: 0.5;
+}
+
+.drop_zone_over {
+  border-style: solid;
+  border-color: var(--pri);
+}
+.drop_zone_input {
+  display: none;
+}
+.drop_zone_thumb {
+  width: 100px;
+  height: 100px;
+  min-height: 100px;
+  max-height: 300px;
+  overflow: hidden;
+  background-size: cover;
+  position: relative;
+  border-radius: 4px;
+  order: 1;
+}
+
+.drop_zone_after {
+  border: none;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  height: 160px;
+  margin: var(--desk-sm) auto;
+}
+
+.drop_zone_prompt_after {
+  opacity: 1;
+  order: 2;
+  font-size: var(--sm-font);
+  padding: var(--desk-sm);
+}
+
+/* file form */
+
+.file_form {
+  width: 280px;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.file_form input,
+#text_password_input {
+  width: 100%;
+  height: 35px;
+  border-radius: 4px;
+  background-color: var(--text);
+  border: 1px solid var(--sec);
+  padding: 0 var(--desk-xsm);
+  padding-top: 1.5px;
+  margin-bottom: var(--desk-base);
+  color: var(--bg);
+  font-size: var(--base-font);
+  outline: none;
+}
+
+.btn_container {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text_btn_container {
+  width: 100%;
+  display: none;
+}
+
+.btn_container button {
+  width: 70px;
+  height: 30px;
+  border-radius: 2px;
+  cursor: pointer;
+  border: none;
+  margin: 0 var(--desk-sm);
+  font-weight: 500;
+  font-family: Poppins, sans-serif;
+  color: var(--text);
+  letter-spacing: 0.025rem;
+}
+
+.btn_container button:nth-child(1) {
+  background-color: var(--assent);
+}
+
+.btn_container button:nth-child(2) {
+  background-color: var(--pri);
+}
+
+.btn_container button:nth-child(3) {
+  background-color: var(--success);
+}
+
+.save_container {
+  width: 100%;
+}
+
+.save_btn {
+  width: 100px !important;
+}
+
+.save_btn_submit {
+  background-color: var(--success) !important;
+}
+
+/* file download */
+.file_download {
+  display: none;
+}
+
+/* text form */
+
+.text_form {
+  width: 280px;
+}
+
+.text_form textarea {
+  width: 100%;
+  height: 50px;
+  background-color: transparent;
+  border: 1.5px dashed var(--sec);
+  border-radius: 4px;
+  padding: var(--desk-sm);
+  padding-top: 15px;
+  margin: var(--desk-base) auto;
+  font-weight: 500;
+  outline: none;
+  resize: none;
+}
+
+.text_form textarea::placeholder {
+  color: var(--text);
+  opacity: 0.5;
+}
+
+.text_form_input_after {
+  background-color: var(--text) !important;
+  height: 100px !important;
+  border: none !important;
+  padding-top: var(--desk-sm) !important;
+  color: var(--bg) !important;
+}
+
+.text_form_input_after::placeholder {
+  color: var(--bg) !important;
+}
+
+#text_password_input {
+  display: none;
+}
+
+/* text form output */
+.output {
+  display: none;
+}
+
+.output_title {
+  margin-top: var(--desk-base);
+  text-align: center;
+  font-size: 14px;
+}
+
+.output_text_div {
+  background-color: var(--assent);
+  height: 100px;
+  border: none;
+  padding-top: var(--desk-sm);
+  color: var(--text);
+  border-radius: 4px;
+  padding: var(--desk-sm);
+  margin: var(--desk-base) auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.output_text_div::-webkit-scrollbar,
+.output_text_div p::-webkit-scrollbar {
+  display: none;
+}
+
+.output_text_div p {
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  font-weight: 500;
+  font-size: 14px;
+  font-family: Poppins, sans-serif;
+  word-break: break-all;
+}
+
+.copy_btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 30px;
+  background-color: var(--bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20000;
+  opacity: 1;
+  cursor: pointer;
+  border-radius: 0 0 0 3px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.copy_btn_svg {
+  margin-top: 2px;
+  margin-right: 2px;
+  background-image: url("../images/copy_icon.svg");
+  object-fit: cover;
+  width: 16px;
+  height: 16px;
+}
+
+.copy_btn p {
+  margin-top: 14px;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.copy_btn_green {
+  background-color: var(--success) !important;
+  color: var(--bg);
+  font-weight: 600 !important;
+}
+.copy_btn_svg_green {
+  background-image: url("../images/copied_icon.svg") !important;
+  object-fit: cover;
+}
