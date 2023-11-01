@@ -59,10 +59,12 @@ const textDecryptBtn = document.getElementById("decrypt_btn");
 document.querySelectorAll(".drop_zone_input").forEach((inputElement) => {
   const dropZoneElement = inputElement.closest(".drop_zone");
   dropZoneElement.addEventListener("click", (e) => {
+    inputElement.value = "";
     inputElement.click();
   });
   inputElement.addEventListener("change", (e) => {
     if (inputElement.files.length) {
+      filepath = inputElement.files[0].path;
       updateThumbnail(dropZoneElement, inputElement.files[0]);
     }
   });
@@ -85,6 +87,7 @@ document.querySelectorAll(".drop_zone_input").forEach((inputElement) => {
     dropZoneElement.classList.remove("drop_zone_over");
   });
 });
+
 function updateThumbnail(dropZoneElement, file) {
   let thumbnailElement = dropZoneElement.querySelector(".drop_zone_thumb");
   cThumbTitle = file.name;
