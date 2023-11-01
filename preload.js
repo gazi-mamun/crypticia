@@ -17,15 +17,18 @@ contextBridge.exposeInMainWorld("fileEncryption", {
 
     return encrypt(crypto, data, password);
   },
-  savingFile: (data, encoding, mimeType, name) => {
-    var blob = new Blob([data], { type: encoding });
-    FileSaver.saveAs(blob, `${name}.${mimeType}`);
-  },
   decryptTextFile: async (filepath, password) => {
     const fileData = fs.readFileSync(filepath);
     const data = fileData.toString();
 
     return decrypt(crypto, data, password);
+  },
+});
+
+contextBridge.exposeInMainWorld("fileSaving", {
+  savingFile: (data, encoding, mimeType, name) => {
+    var blob = new Blob([data], { type: encoding });
+    FileSaver.saveAs(blob, `${name}.${mimeType}`);
   },
   makingBuffer: (str) => {
     return Buffer.from(str, "base64");

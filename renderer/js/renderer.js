@@ -1,5 +1,8 @@
 let filepath = "";
 let filename = "";
+let cThumbImgUrl = "";
+let cThumbTitle = "";
+let isThumbImg;
 let outputData = null;
 let outputFileType = null;
 let processing = false;
@@ -84,8 +87,12 @@ document.querySelectorAll(".drop_zone_input").forEach((inputElement) => {
 });
 function updateThumbnail(dropZoneElement, file) {
   let thumbnailElement = dropZoneElement.querySelector(".drop_zone_thumb");
+  cThumbTitle = file.name;
   const fileExtArr = file.name.split(".");
   const fileExt = fileExtArr[fileExtArr.length - 1];
+  filename = file.name.split(`.${fileExt}`)[0];
+  filename = filename.split(`-(encrypted)`)[0];
+  filename = filename.split(`-(decrypted)`)[0];
 
   // Changing styles of other after dropping file
   const dropZonePrompt = dropZoneElement.querySelector(".drop_zone_prompt");
@@ -120,14 +127,18 @@ function updateThumbnail(dropZoneElement, file) {
       thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
       thumbnailElement.style.height = `100%`;
       thumbnailElement.style.width = `100%`;
+      cThumbImgUrl = reader.result;
     };
   } else {
     // thumbnail for image
     if (fileExtensions.hasOwnProperty(fileExt)) {
       thumbnailElement.style.backgroundImage = `url('../images/${fileExtensions[fileExt]}.png')`;
+      cThumbImgUrl = `../images/${fileExtensions[fileExt]}.png`;
     } else {
       thumbnailElement.style.backgroundImage = `url('../images/${fileExtensions.default}.png')`;
+      cThumbImgUrl = `../images/${fileExtensions.default}.png`;
     }
+    isThumbImg = false;
   }
 }
 
@@ -165,6 +176,11 @@ fileForm.addEventListener("submit", (e) => {
   thumbnailElement.style.backgroundImage = `url('../images/encrypting.gif')`;
   thumbnailElement.style.height = `100%`;
   thumbnailElement.style.width = `100%`;
+  if (fileSubmitBtn.textContent === "Encrypt") {
+    dropZonePrompt.textContent = "Encrypting";
+  } else {
+    dropZonePrompt.textContent = "Decrypting";
+  }
 
   setTimeout(async () => {
     try {
@@ -182,7 +198,7 @@ fileForm.addEventListener("submit", (e) => {
           thumbnailElement.style.backgroundImage = `url('../images/crypticia.png'`;
           thumbnailElement.style.height = `100px`;
           thumbnailElement.style.width = `100px`;
-          dropZonePrompt.textContent = "encrypted.crypticia";
+          dropZonePrompt.textContent = `${filename}-(encrypted).crypticia`;
           alert("success", "File encryption was successful.!");
         }
       }
@@ -202,18 +218,20 @@ fileForm.addEventListener("submit", (e) => {
 
           document.querySelector(".file_download").style.display = "block";
           document.querySelector(".file_form").style.display = "none";
-          dropZonePrompt.textContent = "decrypted.crypticia";
+          dropZonePrompt.textContent = `${filename}-(decrypted).crypticia`;
           alert("success", "File decryption was successful!");
 
           // updating thumbnail icon
           if (
-            oldExt === ".png" ||
+            oldExt === "png" ||
             oldExt === "jpg" ||
             oldExt === "gif" ||
             oldExt === "jpeg"
           ) {
+            const buf = await fileSaving.makingBuffer(deData);
+            const blob = new Blob([buf], { type: "utf-8" });
             const reader = new FileReader();
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(blob);
             reader.onload = () => {
               thumbnailElement.style.backgroundImage = `url('${reader.result}')`;
               thumbnailElement.style.height = `100%`;
@@ -233,26 +251,48 @@ fileForm.addEventListener("submit", (e) => {
         }
       }
     } catch (error) {
-      console.log(error);
+      // error handeling
+      console.log(error.message);
+
       if (fileSubmitBtn.textContent === "Encrypt") {
         alert("error", "Uh-oh! Something went wrong during encryption");
       }
+
       if (fileSubmitBtn.textContent === "Decrypt") {
-        alert("error", "Uh-oh! Something went wrong during decryption");
+        if (
+          error.message ===
+          `error:1e000065:Cipher functions:OPENSSL_internal:BAD_DECRYPT`
+        ) {
+          alert("error", "Wrong Password");
+        } else {
+          alert("error", "Uh-oh! Something went wrong during decryption");
+        }
       }
 
-      password.value = "";
-      fileForm.style.display = "none";
-      document.querySelector(".file_download").style.display = "none";
-      document.querySelector(".drop_zone_thumb").remove();
-      dropZonePrompt.textContent = "Drop file here or click to encrypt/decrypt";
-      dropZonePrompt.classList.remove("drop_zone_prompt_after");
-      dropZone.classList.remove("drop_zone_after");
-      document.querySelector(".divider").style.display = "block";
-      textForm.style.display = "block";
-      dropZoneInput.value = null;
+      if (
+        error.message !==
+        `error:1e000065:Cipher functions:OPENSSL_internal:BAD_DECRYPT`
+      ) {
+        password.value = "";
+        fileForm.style.display = "none";
+        document.querySelector(".file_download").style.display = "none";
+        document.querySelector(".drop_zone_thumb").remove();
+        dropZonePrompt.textContent =
+          "Drop file here or click to encrypt/decrypt";
+        dropZonePrompt.classList.remove("drop_zone_prompt_after");
+        dropZone.classList.remove("drop_zone_after");
+        document.querySelector(".divider").style.display = "block";
+        textForm.style.display = "block";
+        dropZoneInput.value = null;
+      } else {
+        const thumbnailElement = document.querySelector(".drop_zone_thumb");
+        thumbnailElement.style.backgroundImage = `url(${cThumbImgUrl})`;
+        thumbnailElement.style.height = isThumbImg ? "100%" : "100px";
+        thumbnailElement.style.width = isThumbImg ? "100%" : "100px";
+        dropZonePrompt.textContent = cThumbTitle;
+      }
     }
-  }, 2000);
+  }, 1500);
 });
 
 startOverBtn.addEventListener("click", () => {
@@ -271,11 +311,21 @@ startOverBtn.addEventListener("click", () => {
 
 saveFileBtn.addEventListener("click", () => {
   if (fileSubmitBtn.textContent === "Encrypt") {
-    fileEncryption.savingFile(outputData, "utf-8", "crypticia", "encrypted");
+    fileSaving.savingFile(
+      outputData,
+      "utf-8",
+      "crypticia",
+      `${filename}-(encrypted)`
+    );
   }
   if (fileSubmitBtn.textContent === "Decrypt") {
-    const buf = fileEncryption.makingBuffer(outputData);
-    fileEncryption.savingFile(buf, "utf-8", outputFileType, "decrypted");
+    const buf = fileSaving.makingBuffer(outputData);
+    fileSaving.savingFile(
+      buf,
+      "utf-8",
+      outputFileType,
+      `${filename}-(decrypted)`
+    );
   }
 });
 
@@ -366,7 +416,7 @@ copyBtn.addEventListener("click", () => {
       document
         .querySelector(".copy_btn_svg")
         .classList.remove("copy_btn_svg_green");
-    }, 5000);
+    }, 2000);
   }
 });
 
@@ -375,7 +425,7 @@ copyBtn.addEventListener("click", () => {
 const alert = (type, msg) => {
   Toastify.toast({
     text: msg,
-    duration: 5000,
+    duration: 3000,
     close: false,
     style: {
       background: type === "success" ? "#4CAF50" : "#ff5252",

@@ -1,8 +1,8 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("node:path");
 
-process.env.NODE_ENV = "development";
-// process.env.NODE_ENV = "production";
+// process.env.NODE_ENV = "development";
+process.env.NODE_ENV = "production";
 
 const isDev = process.env.NODE_ENV == "development";
 const isMac = process.platform === "darwin";
