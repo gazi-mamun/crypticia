@@ -2,7 +2,7 @@
   "name": "crypticia",
   "productName": "Crypticia",
   "version": "1.0.0",
-  "description": "Your all-in-one solution for file and text encryption on the desktop. Unleash the power to safeguard your digital world effortlessly—encrypt and decrypt files of any type with a single click. With Crypticia's user-friendly interface, fortify your data against prying eyes and ensure the utmost confidentiality for your documents and messages. Elevate your security game and experience seamless encryption like never before.",
+  "description": "Your all-in-one solution for file and text encryption on the desktop.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -20,12 +20,24 @@
       "buildResources": "resources"
     },
     "win": {
-      "icon": "resources/icon.png"
+      "icon": "resources/512x512.ico",
+      "target": [
+        "nsis"
+      ],
+      "signExts": [
+        ".crypticia"
+      ]
+    },
+    "nsis": {
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false,
+      "perMachine": true
     },
     "fileAssociations": [
       {
         "ext": "crypticia",
-        "icon": "resources/file_ext_icon.png"
+        "icon": "resources/file_ext_icon.ico"
       }
     ]
   },

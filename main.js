@@ -19,7 +19,7 @@ function createMainWindow() {
       nodeIntegration: true,
       preload: path.join(__dirname, "preload.js"),
     },
-    icon: path.join(__dirname, "resources/icon.png"),
+    icon: path.join(__dirname, "resources/512x512.png"),
   });
 
   ipcMain.on("minimize:window", () => {
@@ -28,6 +28,7 @@ function createMainWindow() {
 
   ipcMain.on("close:window", () => {
     win.close();
+    app.quit();
   });
 
   // Open devtools if in dev env
