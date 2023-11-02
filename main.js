@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu } = require("electron");
 const path = require("node:path");
 
 // process.env.NODE_ENV = "development";
@@ -29,6 +29,17 @@ function createMainWindow() {
   ipcMain.on("close:window", () => {
     win.close();
     app.quit();
+  });
+
+  ipcMain.on("show:context:menu", (event) => {
+    const template = [
+      {
+        label: "Paste",
+        role: "paste",
+      },
+    ];
+    const menu = Menu.buildFromTemplate(template);
+    menu.popup({ window: BrowserWindow.fromWebContents(event.sender) });
   });
 
   // Open devtools if in dev env

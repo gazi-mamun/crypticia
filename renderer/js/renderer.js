@@ -358,6 +358,10 @@ textFormInput.addEventListener("focus", () => {
   }
 });
 
+textFormInput.addEventListener("contextmenu", () => {
+  ipcRenderer.send("show:context:menu");
+});
+
 textCancelBtn.addEventListener("click", () => {
   document.querySelector(".divider").style.display = "block";
   dropZone.style.display = "flex";
