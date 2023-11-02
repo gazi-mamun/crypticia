@@ -1,10 +1,8 @@
-const { contextBridge } = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 const fs = require("fs");
 const crypto = require("crypto");
 const { encrypt, decrypt } = require("./utils/cryptoFunc");
 const FileSaver = require("file-saver");
-
-const Toastify = require("toastify-js");
 
 contextBridge.exposeInMainWorld("fileEncryption", {
   encryptTextFile: async (filepath, password) => {
@@ -44,6 +42,9 @@ contextBridge.exposeInMainWorld("textEncryption", {
   },
 });
 
-contextBridge.exposeInMainWorld("Toastify", {
-  toast: (options) => Toastify(options).showToast(),
+contextBridge.exposeInMainWorld("ipcRenderer", {
+  send: (channel, data) => ipcRenderer.send(channel, data),
+  on: (channel, func) => {
+    ipcRenderer.on(channel, (event, ...args) => func(...args));
+  },
 });

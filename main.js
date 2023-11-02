@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
 
 // process.env.NODE_ENV = "development";
@@ -13,12 +13,21 @@ function createMainWindow() {
     height: 470,
     resizable: false,
     maximizable: false,
+    frame: false,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: true,
       preload: path.join(__dirname, "preload.js"),
     },
-    icon: path.join(__dirname, "assets/icons/icon_512x512.png"),
+    icon: path.join(__dirname, "resources/icon.png"),
+  });
+
+  ipcMain.on("minimize:window", () => {
+    win.minimize();
+  });
+
+  ipcMain.on("close:window", () => {
+    win.close();
   });
 
   // Open devtools if in dev env

@@ -6,6 +6,7 @@ let isThumbImg;
 let outputData = null;
 let outputFileType = null;
 let processing = false;
+let alertIndex = 100;
 
 const fileExtensions = {
   ai: "ai",
@@ -35,6 +36,9 @@ const fileExtensions = {
   zip: "zip",
 };
 
+const logoElement = document.querySelector(".logo");
+const appCloseBtn = document.querySelector(".close");
+const appMinimize = document.querySelector(".minimize");
 // drop zone
 const dropZone = document.querySelector(".drop_zone");
 const dropZoneInput = document.querySelector(".drop_zone_input");
@@ -55,6 +59,14 @@ const copyBtn = document.querySelector(".copy_btn");
 const textOutputData = document.querySelector(".output_text");
 const textEncryptBtn = document.getElementById("encrypt_btn");
 const textDecryptBtn = document.getElementById("decrypt_btn");
+
+appCloseBtn.addEventListener("click", () => {
+  ipcRenderer.send("close:window");
+});
+
+appMinimize.addEventListener("click", () => {
+  ipcRenderer.send("minimize:window");
+});
 
 document.querySelectorAll(".drop_zone_input").forEach((inputElement) => {
   const dropZoneElement = inputElement.closest(".drop_zone");
@@ -89,6 +101,7 @@ document.querySelectorAll(".drop_zone_input").forEach((inputElement) => {
 });
 
 function updateThumbnail(dropZoneElement, file) {
+  logoElement.style.display = "none";
   let thumbnailElement = dropZoneElement.querySelector(".drop_zone_thumb");
   cThumbTitle = file.name;
   const fileExtArr = file.name.split(".");
@@ -157,6 +170,7 @@ fileCancelBtn.addEventListener("click", () => {
   textForm.style.display = "block";
   dropZoneInput.value = null;
   fileSubmitBtn.textContent = "Encrypt";
+  logoElement.style.display = "block";
 });
 
 fileForm.addEventListener("submit", (e) => {
@@ -310,6 +324,7 @@ startOverBtn.addEventListener("click", () => {
   textForm.style.display = "block";
   document.querySelector(".file_download").style.display = "none";
   fileSubmitBtn.textContent = "Encrypt";
+  logoElement.style.display = "block";
 });
 
 saveFileBtn.addEventListener("click", () => {
@@ -333,6 +348,7 @@ saveFileBtn.addEventListener("click", () => {
 });
 
 textFormInput.addEventListener("focus", () => {
+  logoElement.style.display = "none";
   if (!textFormInput.classList.contains("text_form_input_after")) {
     document.querySelector(".divider").style.display = "none";
     textPasswordInput.style.display = "block";
@@ -351,6 +367,7 @@ textCancelBtn.addEventListener("click", () => {
   textFormInput.classList.remove("text_form_input_after");
   textFormInput.value = "";
   textPasswordInput.value = "";
+  logoElement.style.display = "block";
 });
 
 textEncryptBtn.addEventListener("click", async () => {
@@ -426,15 +443,26 @@ copyBtn.addEventListener("click", () => {
 // helper funcs
 
 const alert = (type, msg) => {
-  Toastify.toast({
-    text: msg,
-    duration: 3000,
-    close: false,
-    style: {
-      background: type === "success" ? "#4CAF50" : "#ff5252",
-      color: "white",
-      textAlign: "center",
-      fontSize: "14px",
-    },
-  });
+  const mainBody = document.querySelector(".main_body");
+
+  if (mainBody.querySelector(".alert")) {
+    alertIndex += 100;
+  }
+  const alertElement = document.createElement("div");
+  mainBody.appendChild(alertElement);
+  alertElement.classList.add("alert");
+  const alertText = document.createElement("p");
+  alertElement.appendChild(alertText);
+  alertText.classList.add("alert_text");
+
+  alertText.textContent = msg;
+  alertElement.style.backgroundColor =
+    type === "success" ? "#4CAF50" : "#ff5252";
+  alertElement.style.zIndex = alertIndex;
+
+  setTimeout(() => {
+    alertElement.removeChild(alertText);
+    mainBody.removeChild(alertElement);
+    alertIndex -= 100;
+  }, 3000);
 };
